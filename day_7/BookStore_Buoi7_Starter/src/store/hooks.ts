@@ -43,7 +43,7 @@ export function useAuth() {
   return {
     user,
     token,
-    isLoggedIn: false, // TODO BT7.4b: true khi có cả token lẫn user  →  !!token && !!user
+    isLoggedIn: !!token && !!user,
     signIn: useCallback((u: User, t: string) => dispatch(setCredentials({ user: u, token: t })), [dispatch]),
     signOut: useCallback(() => dispatch(logout()), [dispatch]),
     patchUser: useCallback((p: Partial<User>) => dispatch(updateUser(p)), [dispatch]),
