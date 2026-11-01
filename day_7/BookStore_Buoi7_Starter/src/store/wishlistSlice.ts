@@ -5,14 +5,18 @@ interface WishlistState {
 }
 const initialState: WishlistState = { ids: [] };
 
-// THỬ THÁCH (BT7.C1) — dùng lại ở buổi sau
 const wishlistSlice = createSlice({
   name: "wishlist",
   initialState,
   reducers: {
-    // TODO BT7.C1 (thử thách): nếu id đã có trong state.ids thì bỏ ra, chưa có thì thêm vào
     toggleWishlist(state, action: PayloadAction<number>) {
-      void state; void action;
+      const index = state.ids.indexOf(action.payload);
+
+      if (index >= 0) {
+        state.ids.splice(index, 1);
+      } else {
+        state.ids.push(action.payload);
+      }
     },
     hydrateWishlist(state, action: PayloadAction<number[]>) {
       state.ids = action.payload;

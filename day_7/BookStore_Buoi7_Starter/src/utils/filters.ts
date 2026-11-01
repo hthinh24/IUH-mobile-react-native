@@ -12,11 +12,17 @@ export const PRICE_RANGES: { key: Exclude<PriceRange, null>; label: string }[] =
   { key: "gt300", label: "Trên 300k" },
 ];
 
-// TODO BT7.C2 (thử thách): trả true nếu giá nằm trong khoảng r (null = không lọc)
-//   lt100: < 100000 · 100to300: 100000..300000 · gt300: > 300000
-const inRange = (price: number, r: PriceRange): boolean => {
-  void price; void r;
-  return true;
+const inRange = (price: number, range: PriceRange): boolean => {
+  if (range === null) return true;
+
+  switch (range) {
+    case "lt100":
+      return price < 100000;
+    case "100to300":
+      return price >= 100000 && price <= 300000;
+    case "gt300":
+      return price > 300000;
+  }
 };
 
 export interface BookFilter {
@@ -38,6 +44,6 @@ export function filterBooks(books: Book[], f: BookFilter): Book[] {
     const matchesCategory =
       f.categoryId === null || book.categoryId === f.categoryId;
 
-    return matchesKeyword && matchesCategory;
+    return matchesKeyword && matchesCategory && inRange(book.price, f.priceRange);
   });
 }

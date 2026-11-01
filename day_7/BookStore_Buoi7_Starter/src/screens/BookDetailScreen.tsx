@@ -4,7 +4,7 @@ import { LoadingView } from "../components/LoadingView";
 import { ErrorView } from "../components/ErrorView";
 import { getBookById } from "../services/bookService";
 import { getErrorMessage } from "../api/client";
-import { useCart } from "../store/hooks";
+import { useCart, useWishlist } from "../store/hooks";
 import { RootScreenProps } from "../navigation/types";
 import { Book } from "../types";
 import { colors, formatPrice, radius } from "../theme";
@@ -13,6 +13,7 @@ import { colors, formatPrice, radius } from "../theme";
 export function BookDetailScreen({ route }: RootScreenProps<"BookDetail">) {
   const { bookId } = route.params;
   const { add } = useCart();
+  const { isFavorite, toggle } = useWishlist();
 
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,8 @@ export function BookDetailScreen({ route }: RootScreenProps<"BookDetail">) {
     );
   }
 
+  const wishlisted = isFavorite(book.id);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={[styles.cover, { backgroundColor: book.color }]}>
@@ -60,6 +63,14 @@ export function BookDetailScreen({ route }: RootScreenProps<"BookDetail">) {
       <Text style={styles.price}>{formatPrice(book.price)}</Text>
       <Text style={styles.stock}>Còn {book.stock} cuốn</Text>
       <Text style={styles.desc}>{book.description}</Text>
+      <Pressable
+        style={[styles.wishlistBtn, wishlisted && styles.wishlistBtnActive]}
+        onPress={() => toggle(book.id)}
+      >
+        <Text style={[styles.wishlistText, wishlisted && styles.wishlistTextActive]}>
+          {wishlisted ? "♥ Đã thêm vào yêu thích" : "♡ Thêm vào yêu thích"}
+        </Text>
+      </Pressable>
       <Pressable
         style={styles.btn}
         onPress={() =>
@@ -89,6 +100,10 @@ const styles = StyleSheet.create({
   price: { fontSize: 20, fontWeight: "800", color: colors.indigo },
   stock: { color: colors.muted },
   desc: { color: colors.text, lineHeight: 22, marginTop: 4 },
-  btn: { backgroundColor: colors.indigo, padding: 14, borderRadius: radius.md, alignItems: "center", marginTop: 12 },
+  wishlistBtn: { backgroundColor: "#fff", padding: 14, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.heart, alignItems: "center", marginTop: 12 },
+  wishlistBtnActive: { backgroundColor: colors.heart },
+  wishlistText: { color: colors.heart, fontWeight: "800", fontSize: 15 },
+  wishlistTextActive: { color: "#fff" },
+  btn: { backgroundColor: colors.indigo, padding: 14, borderRadius: radius.md, alignItems: "center", marginTop: 4 },
   btnText: { color: "#fff", fontWeight: "800", fontSize: 16 },
 });
