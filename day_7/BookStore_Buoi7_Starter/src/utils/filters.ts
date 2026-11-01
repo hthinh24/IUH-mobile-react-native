@@ -29,12 +29,15 @@ export interface BookFilter {
 export function filterBooks(books: Book[], f: BookFilter): Book[] {
   const keyword = normalize(f.keyword);
 
-  if (!keyword) {
-    return books;
-  }
+  return books.filter((book) => {
+    const matchesKeyword =
+      keyword === "" ||
+      normalize(book.title).includes(keyword) ||
+      normalize(book.author).includes(keyword);
 
-  return books.filter((book) =>
-    normalize(book.title).includes(keyword) ||
-    normalize(book.author).includes(keyword)
-  );
+    const matchesCategory =
+      f.categoryId === null || book.categoryId === f.categoryId;
+
+    return matchesKeyword && matchesCategory;
+  });
 }
