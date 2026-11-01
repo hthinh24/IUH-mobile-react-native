@@ -2,6 +2,7 @@
 import React from "react";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { TabBar, type TabItem } from "../components/TabBar";
+import { useCart } from "../store/hooks";
 
 // Ánh xạ tên màn hình với emoji tương ứng
 const EMOJI: Record<string, string> = {
@@ -16,12 +17,14 @@ export function CustomTabBar({
   descriptors,
   navigation,
 }: BottomTabBarProps) {
+  const { totalQuantity } = useCart();
 
   // A. Chuyển routes thành danh sách items cho TabBar
   const items: TabItem[] = state.routes.map((route) => ({
     key: route.key,
     label: descriptors[route.key].options.title ?? route.name,
     emoji: EMOJI[route.name] ?? "•",
+    badge: route.name === "Cart" ? totalQuantity : undefined,
   }));
 
   // B. Xử lý khi người dùng nhấn một tab

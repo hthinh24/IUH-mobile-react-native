@@ -15,9 +15,14 @@ export function useCart() {
   const dispatch = useAppDispatch();
   const items = useAppSelector((s) => s.cart.items);
 
-  // TODO BT7.3b: totalQuantity = tổng quantity · totalPrice = tổng price * quantity (dùng reduce; useMemo theo [items])
-  const totalQuantity = useMemo(() => 0 * items.length, [items]);
-  const totalPrice = useMemo(() => 0 * items.length, [items]);
+  const totalQuantity = useMemo(
+    () => items.reduce((total, item) => total + item.quantity, 0),
+    [items]
+  );
+  const totalPrice = useMemo(
+    () => items.reduce((total, item) => total + item.price * item.quantity, 0),
+    [items]
+  );
 
   return {
     items,
