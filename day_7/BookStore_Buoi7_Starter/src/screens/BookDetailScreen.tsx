@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { TodoBox } from "../components/TodoBox";
-import { MOCK_BOOKS } from "../data/mockBooks";
-// import { LoadingView } from "../components/LoadingView";
-// import { ErrorView } from "../components/ErrorView";
-// import { getBookById } from "../services/bookService";
-// import { getErrorMessage } from "../api/client";
+import { LoadingView } from "../components/LoadingView";
+import { ErrorView } from "../components/ErrorView";
+import { getBookById } from "../services/bookService";
+import { getErrorMessage } from "../api/client";
 import { useCart } from "../store/hooks";
 import { RootScreenProps } from "../navigation/types";
 import { Book } from "../types";
@@ -16,11 +14,41 @@ export function BookDetailScreen({ route }: RootScreenProps<"BookDetail">) {
   const { bookId } = route.params;
   const { add } = useCart();
 
-  // TODO BT7.5d: tạo state book / loading / error và hàm load() gọi getBookById(bookId); chạy trong useEffect([bookId])
-  // TODO BT7.5e: if (loading) return <LoadingView/>;  if (error || !book) return <ErrorView message onRetry={load}/>
-  // Tạm thời lấy sách từ dữ liệu giả để màn hình có nội dung:
-  const book: Book | undefined = MOCK_BOOKS.find((x) => x.id === bookId);
-  if (!book) return <TodoBox id="BT7.5e">{`Không có sách #${bookId} trong dữ liệu giả — hãy gọi API.`}</TodoBox>;
+  const [book, setBook] = useState<Book | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await getBookById(bookId);
+      setBook(data);
+    } catch (e) {
+      setBook(null);
+      setError(getErrorMessage(e));
+    } finally {
+      setLoading(false);
+    }
+  }, [bookId]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
+  if (loading) {
+    return <LoadingView label="Đang tải thông tin sách…" />;
+  }
+
+  if (error || !book) {
+    return (
+      <ErrorView
+        message={error ?? "Không tìm thấy sách."}
+        onRetry={() => void load()}
+      />
+    );
+  }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
