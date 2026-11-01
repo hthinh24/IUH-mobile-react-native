@@ -59,8 +59,9 @@ export function HomeScreen({ navigation }: TabScreenProps<"Home">) {
       )}
       <BookGrid
         data={visibleBooks}
-        // TODO BT7.2a: onPressBook → navigation.navigate("BookDetail", { bookId: b.id })
-        onPressBook={() => { }}
+        onPressBook={(book) =>
+          navigation.navigate("BookDetail", { bookId: book.id })
+        }
         ListHeaderComponent={
           <View>
             <CategoryChips categories={categories} selectedId={categoryId} onSelect={setCategoryId} />
