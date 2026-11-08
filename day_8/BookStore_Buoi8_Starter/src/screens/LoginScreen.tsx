@@ -1,26 +1,72 @@
 import React, { useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { TodoBox } from "../components/TodoBox";
 import { FormField } from "../components/FormField";
 import { PrimaryButton } from "../components/PrimaryButton";
-import { login } from "../services/authService"; // đã viết sẵn: login(email, password) → { user, token }
 import { getErrorMessage } from "../api/client";
-import { useAuth } from "../store/hooks";
-import { validateEmail, validatePassword } from "../utils/validators"; // đã viết sẵn: trả về chuỗi lỗi hoặc null
+import { login } from "../services/authService"; // login(email, password) → { user, token }
 import { RootScreenProps } from "../navigation/types";
+import { useAuth } from "../store/hooks";
 import { colors } from "../theme";
+import { validateEmail, validatePassword } from "../utils/validators";
+
+type LoginErrors = {
+  email?: string | null;
+  password?: string | null;
+};
 
 export function LoginScreen({ navigation, route }: RootScreenProps<"Login">) {
   const { signIn } = useAuth();
-  // TODO BT8.1: khai báo state: email, password, errors, submitError, loading
-  //   gợi ý: const [errors, setErrors] = useState<{ email?: string | null; password?: string | null }>({});
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<LoginErrors>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  // TODO BT8.1: viết hàm submit
-  //   1) validate 2 ô → setErrors; còn lỗi thì dừng
-  //   2) setLoading(true) → gọi login(email, password) → signIn(user, token)
-  //   3) nếu route.params?.redirectTo === "Checkout" → navigation.replace("Checkout", { total: route.params.total ?? 0 })
-  //      ngược lại → navigation.navigate("Tabs", { screen: "Home" })
-  //   4) catch → setSubmitError(getErrorMessage(err)); finally → setLoading(false)
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+    setSubmitError(null);
+    setErrors((current) =>
+      current.email ? { ...current, email: validateEmail(value) } : current
+    );
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+    setSubmitError(null);
+    setErrors((current) =>
+      current.password ? { ...current, password: validatePassword(value) } : current
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (loading) return;
+
+    setSubmitError(null);
+
+    const nextErrors: LoginErrors = {
+      email: validateEmail(email),
+      password: validatePassword(password),
+    };
+    setErrors(nextErrors);
+
+    if (nextErrors.email || nextErrors.password) return;
+
+    setLoading(true);
+    try {
+      const { user, token } = await login(email, password);
+      signIn(user, token);
+
+      if (route.params?.redirectTo === "Checkout") {
+        navigation.replace("Checkout", { total: route.params.total ?? 0 });
+      } else {
+        navigation.navigate("Tabs", { screen: "Home" });
+      }
+    } catch (error) {
+      setSubmitError(getErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
@@ -28,11 +74,37 @@ export function LoginScreen({ navigation, route }: RootScreenProps<"Login">) {
         <Text style={styles.logo}>📚</Text>
         <Text style={styles.title}>Đăng nhập BookStore</Text>
 
-        <TodoBox id="BT8.1">{"Form đăng nhập: 2 ô FormField (Email, Mật khẩu — secureTextEntry), lỗi hiện NGAY DƯỚI từng ô, dòng lỗi chung (đỏ), nút PrimaryButton “Đăng nhập” có loading."}</TodoBox>
+        <FormField
+          label="Email"
+          value={email}
+          onChangeText={handleEmailChange}
+          placeholder="name@example.com"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+          autoCapitalize="none"
+          autoCorrect={false}
+          error={errors.email}
+        />
 
-        <Pressable onPress={() => navigation.replace("Register", route.params)}>
+        <FormField
+          label="Mật khẩu"
+          value={password}
+          onChangeText={handlePasswordChange}
+          placeholder="Nhập mật khẩu"
+          secureTextEntry
+          textContentType="password"
+          returnKeyType="done"
+          error={errors.password}
+        />
+
+        {submitError ? <Text style={styles.submitError}>{submitError}</Text> : null}
+
+        <PrimaryButton title="Đăng nhập" onPress={handleSubmit} loading={loading} disabled={loading} />
+
+        <Pressable onPress={() => navigation.replace("Register", route.params)} disabled={loading}>
           <Text style={styles.link}>Chưa có tài khoản? Đăng ký</Text>
         </Pressable>
+
         <View style={styles.hint}>
           <Text style={styles.hintText}>Tài khoản demo: demo@bookstore.vn / 123456</Text>
         </View>
