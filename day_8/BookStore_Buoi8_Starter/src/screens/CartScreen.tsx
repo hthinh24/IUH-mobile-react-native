@@ -7,7 +7,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 
 import { EmptyState } from "../components/EmptyState";
 import { useAuth, useCart } from "../store/hooks";
-import { confirmDialog } from "../utils/dialog"; // đã viết sẵn — dùng ở BT8.7a
+import { confirmDialog } from "../utils/dialog";
 import { TabScreenProps } from "../navigation/types";
 import { colors, formatPrice } from "../theme";
 
@@ -16,10 +16,17 @@ export function CartScreen({ navigation }: TabScreenProps<"Cart">) {
   const { isLoggedIn } = useAuth();
   const finalTotal = totalPrice; // TODO BT8.C2 (thử thách): trừ mã giảm giá → finalTotal = totalPrice - discount
 
-  // TODO BT8.7a: xóa sản phẩm có XÁC NHẬN — dùng confirmDialog(title, message, onConfirm) đã viết sẵn ở utils/dialog.ts
-  //   (Alert.alert không chạy trên web nên đã bọc sẵn). Hiện tại xóa ngay không hỏi.
+  // BT8.7a: yêu cầu xác nhận trước khi xóa sản phẩm khỏi giỏ hàng.
   const askRemove = (bookId: number) => {
-    remove(bookId);
+    const item = items.find((cartItem) => cartItem.bookId === bookId);
+    if (!item) return;
+
+    confirmDialog(
+      "Xác nhận xóa",
+      `Xóa ${item.title} khỏi giỏ hàng?`,
+      () => remove(bookId),
+      "Xóa"
+    );
   };
 
   // BT8.4: chỉ cho vào Checkout khi đã đăng nhập; giữ tổng tiền để quay lại đúng luồng sau xác thực.

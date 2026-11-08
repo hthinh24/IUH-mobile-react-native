@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "../store/hooks";
 import { setCredentials } from "../store/authSlice";
 import { hydrateCart } from "../store/cartSlice";
 import { hydrateWishlist } from "../store/wishlistSlice";
-import { clearAuth, loadAuth, saveAuth } from "../storage/authStorage"; // đã viết sẵn
-import { loadJSON } from "../storage/storage"; // đã viết sẵn
+import { clearAuth, loadAuth, saveAuth } from "../storage/authStorage";
+import { loadJSON } from "../storage/storage";
 import { useAutoPersist } from "./useAutoPersist";
-import { CartItem } from "../types"; // dùng khi đọc loadJSON<CartItem[]>
+import { CartItem } from "../types";
 
 export const CART_KEY = "@bookstore/cart";
 export const WISHLIST_KEY = "@bookstore/wishlist";
@@ -23,21 +23,37 @@ export function usePersistence() {
   useEffect(() => {
     let active = true;
 
-    const restoreSession = async () => {
+    const restoreData = async () => {
       try {
-        // BT8.3: khôi phục phiên đăng nhập trước khi hiển thị ứng dụng.
-        const auth = await loadAuth();
+        // Đọc dữ liệu song song; chưa bật ready để tránh ghi đè dữ liệu cũ bằng state rỗng.
+        const [auth, savedCart, savedWishlist] = await Promise.all([
+          loadAuth(),
+          loadJSON<CartItem[]>(CART_KEY),
+          loadJSON<number[]>(WISHLIST_KEY),
+        ]);
+
+        if (!active) return;
+
+        // BT8.3: khôi phục phiên đăng nhập.
         if (auth?.token && auth?.user) {
           dispatch(setCredentials(auth));
         }
 
-        // BT8.7b: đọc giỏ hàng và yêu thích tại đây.
+        // BT8.7b: khôi phục giỏ hàng và danh sách yêu thích.
+        if (Array.isArray(savedCart)) {
+          dispatch(hydrateCart(savedCart));
+        }
+        if (Array.isArray(savedWishlist)) {
+          dispatch(hydrateWishlist(savedWishlist));
+        }
+      } catch {
+        // Storage lỗi thì vẫn cho app khởi động với state mặc định.
       } finally {
         if (active) setReady(true);
       }
     };
 
-    void restoreSession();
+    void restoreData();
 
     return () => {
       active = false;
@@ -55,7 +71,9 @@ export function usePersistence() {
     }
   }, [ready, user, token]);
 
-  // TODO BT8.7b: gọi useAutoPersist(CART_KEY, cartItems, ready) và useAutoPersist(WISHLIST_KEY, wishlistIds, ready)
+  // BT8.7b: tự lưu mỗi khi Redux cart/wishlist thay đổi sau khi đã hydrate.
+  useAutoPersist(CART_KEY, cartItems, ready);
+  useAutoPersist(WISHLIST_KEY, wishlistIds, ready);
 
   return ready;
 }
