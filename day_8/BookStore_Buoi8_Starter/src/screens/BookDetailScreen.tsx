@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 import { TodoBox } from "../components/TodoBox";
 import { LoadingView } from "../components/LoadingView";
@@ -51,16 +51,47 @@ export function BookDetailScreen({ navigation, route }: RootScreenProps<"BookDet
     load();
   }, [load]);
 
-  // TODO BT8.5b: điểm trung bình = tổng rating / số review (0 nếu chưa có), dùng useMemo phụ thuộc [reviews]
-  const average = 0;
+  // BT8.5b: tính điểm trung bình từ danh sách đánh giá hiện tại.
+  const average = useMemo(() => {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / reviews.length;
+  }, [reviews]);
 
-  // TODO BT8.5c: gửi đánh giá
-  //   1) chưa chọn sao → setFormError("Vui lòng chọn số sao"); comment rỗng → setFormError("Vui lòng nhập bình luận")
-  //   2) setSending(true) → addReview({ bookId, userId: user.id, userName: user.name, rating, comment: comment.trim() })
-  //   3) thành công: setReviews((prev) => [created, ...prev]) — cập nhật ngay, KHÔNG gọi load() lại; reset rating/comment
-  //   4) catch → setFormError(getErrorMessage(e)); finally → setSending(false)
+  // BT8.5c: validate, gửi đánh giá lên API rồi cập nhật danh sách ngay trên màn hình.
   const submitReview = async () => {
-    if (!user) return;
+    if (!user || sending) return;
+
+    if (rating < 1 || rating > 5) {
+      setFormError("Vui lòng chọn số sao");
+      return;
+    }
+
+    const normalizedComment = comment.trim();
+    if (!normalizedComment) {
+      setFormError("Vui lòng nhập bình luận");
+      return;
+    }
+
+    setSending(true);
+    setFormError(null);
+    try {
+      const created = await addReview({
+        bookId,
+        userId: user.id,
+        userName: user.name,
+        rating,
+        comment: normalizedComment,
+      });
+
+      setReviews((prev) => [created, ...prev]);
+      setRating(0);
+      setComment("");
+    } catch (e) {
+      setFormError(getErrorMessage(e));
+    } finally {
+      setSending(false);
+    }
   };
 
   if (loading) return <LoadingView />;
@@ -92,10 +123,28 @@ export function BookDetailScreen({ navigation, route }: RootScreenProps<"BookDet
       {isLoggedIn ? (
         <View style={styles.form}>
           <Text style={styles.formTitle}>Viết đánh giá của bạn</Text>
-          <RatingStars value={rating} size={30} onChange={setRating} />
-          <FormField label="Bình luận" value={comment} onChangeText={setComment} multiline placeholder="Cảm nhận của bạn về cuốn sách…" autoCapitalize="sentences" style={{ minHeight: 70, textAlignVertical: "top" }} />
+          <RatingStars
+            value={rating}
+            size={30}
+            onChange={(value) => {
+              setRating(value);
+              setFormError(null);
+            }}
+          />
+          <FormField
+            label="Bình luận"
+            value={comment}
+            onChangeText={(value) => {
+              setComment(value);
+              setFormError(null);
+            }}
+            multiline
+            placeholder="Cảm nhận của bạn về cuốn sách…"
+            autoCapitalize="sentences"
+            style={{ minHeight: 70, textAlignVertical: "top" }}
+          />
           {formError ? <Text style={styles.formError}>{formError}</Text> : null}
-          <PrimaryButton title="Gửi đánh giá" onPress={submitReview} loading={sending} />
+          <PrimaryButton title="Gửi đánh giá" onPress={submitReview} loading={sending} disabled={sending} />
         </View>
       ) : (
         <View style={styles.loginHint}>
