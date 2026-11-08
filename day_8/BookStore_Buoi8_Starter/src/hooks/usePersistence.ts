@@ -21,17 +21,38 @@ export function usePersistence() {
   const wishlistIds = useAppSelector((s) => s.wishlist.ids);
 
   useEffect(() => {
-    (async () => {
-      // TODO BT8.3 (auto-login): const auth = await loadAuth(); nếu có token + user → dispatch(setCredentials(auth))
-      // TODO BT8.7b (giỏ hàng + yêu thích): đọc loadJSON<CartItem[]>(CART_KEY) và loadJSON<number[]>(WISHLIST_KEY)
-      //   rồi dispatch(hydrateCart(...)) / dispatch(hydrateWishlist(...)). Gợi ý: dùng Promise.all để đọc 3 thứ song song.
-      setReady(true);
-    })();
+    let active = true;
+
+    const restoreSession = async () => {
+      try {
+        // BT8.3: khôi phục phiên đăng nhập trước khi hiển thị ứng dụng.
+        const auth = await loadAuth();
+        if (auth?.token && auth?.user) {
+          dispatch(setCredentials(auth));
+        }
+
+        // BT8.7b: đọc giỏ hàng và yêu thích tại đây.
+      } finally {
+        if (active) setReady(true);
+      }
+    };
+
+    void restoreSession();
+
+    return () => {
+      active = false;
+    };
   }, [dispatch]);
 
   useEffect(() => {
     if (!ready) return;
-    // TODO BT8.3: có user + token → saveAuth({ user, token }); ngược lại (đã đăng xuất) → clearAuth()
+
+    // BT8.3: lưu phiên khi đã đăng nhập, xóa phiên khi đăng xuất.
+    if (user && token) {
+      void saveAuth({ user, token });
+    } else {
+      void clearAuth();
+    }
   }, [ready, user, token]);
 
   // TODO BT8.7b: gọi useAutoPersist(CART_KEY, cartItems, ready) và useAutoPersist(WISHLIST_KEY, wishlistIds, ready)
