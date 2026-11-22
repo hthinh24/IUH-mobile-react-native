@@ -25,7 +25,7 @@ React Navigation and Redux Toolkit will be introduced in their corresponding exe
 
 ## Progress
 
-- [x] 10.1 – Safe area provider, safe area root for Home, navy BookStore header
+- [x] 10.1 – Source implemented: SafeAreaProvider, SafeAreaView root for Home, navy BookStore header (runtime verification pending)
 - [ ] 10.2 – FlatList and loading state
 - [ ] 10.3 – BookCard
 - [ ] 10.4 – Row/tile layouts
@@ -37,4 +37,4 @@ React Navigation and Redux Toolkit will be introduced in their corresponding exe
 - [ ] 10.10 – Favorites
 - [ ] 10.11 – Optional json-server bonus
 
-The app currently contains the minimum Home scaffold needed to demonstrate exercise 10.1. Later exercises will extend the same project rather than creating separate apps.
+The app currently contains the minimum Home scaffold needed to demonstrate exercise 10.1. Source has been committed; runtime verification is still pending. Later exercises will extend the same project rather than creating separate apps.
