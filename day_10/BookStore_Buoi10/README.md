@@ -1,6 +1,6 @@
 # BookStore – Buổi 10
 
-Expo + React Native + TypeScript project for the React Native practice. The uploaded `BookStore_Buoi10_Snack_Starter.zip` is the source of truth for the starter data, UI scaffolding, and exercise TODOs.
+Expo + React Native + TypeScript project for the React Native practice. The uploaded Starter ZIP is the source of truth for the original dataset, UI scaffolding, and exercise requirements.
 
 ## Run locally
 
@@ -21,15 +21,15 @@ See [SNACK_URL.md](./SNACK_URL.md) for the fixed Snack URL. It loads the project
 ## Progress
 
 - [x] 10.1 – SafeAreaProvider, SafeAreaView root for Home, navy BookStore header
-- [x] 10.2 – Original 10-book Starter dataset, FlatList, keyExtractor, rating and stock indicators, 700ms ActivityIndicator loading state
-- [ ] 10.3 – BookCard
-- [ ] 10.4 – Row/tile layouts
-- [ ] 10.5 – Grid switch and refresh
-- [ ] 10.6 – Search and category filters
-- [ ] 10.7 – React Navigation
-- [ ] 10.8 – Redux store and cart slice
-- [ ] 10.9 – Cart interactions and badge
-- [ ] 10.10 – Favorites
-- [ ] 10.11 – Optional json-server bonus
+- [x] 10.2 – Original Starter dataset, FlatList, keyExtractor, rating and stock indicators, 700ms ActivityIndicator loading state
+- [x] 10.3 – Typed BookCard component, TouchableOpacity, React.memo
+- [x] 10.4 – Row and tile layouts in the same BookCard
+- [x] 10.5 – Two-column grid switch and RefreshControl
+- [x] 10.6 – Accent-insensitive search and category filters
+- [x] 10.7 – Native Stack and Bottom Tabs navigation
+- [x] 10.8 – Redux Toolkit store, cart slice and selectors
+- [x] 10.9 – Add/decrease/remove cart items, total and tab badge
+- [x] 10.10 – Favorites slice and Favorites screen
+- [ ] 10.11 – Optional json-server bonus (not implemented)
 
 Source implementation is committed to GitHub. Runtime verification and screenshots are performed manually in Expo Snack.

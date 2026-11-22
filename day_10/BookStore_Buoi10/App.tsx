@@ -1,12 +1,19 @@
 import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { HomeScreen } from "./screens/HomeScreen";
+import { RootNavigator } from "./navigation";
+import { store } from "./store";
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <HomeScreen />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </Provider>
   );
 }
