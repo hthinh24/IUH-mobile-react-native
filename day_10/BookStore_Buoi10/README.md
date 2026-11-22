@@ -1,40 +1,22 @@
 # BookStore – Buổi 10
 
-Expo + React Native + TypeScript project for the React Native practice.
+Expo + React Native + TypeScript project. This branch is the screenshot checkpoint track, reconstructed from the supplied Starter ZIP and exercise document.
 
-## Run locally
+## Expo Snack
 
-Requires Node.js 22.13+ for Expo SDK 58.
+Open [SNACK_URL.md](./SNACK_URL.md). Keep using that same link; each checkpoint updates the GitHub-backed source behind it. Reload the page after I confirm a new checkpoint is ready.
 
-```powershell
-cd day_10/BookStore_Buoi10
-npm install
-npx expo start
-```
+## Checkpoint status
 
-Press `w` to open the web preview, or scan the QR code with Expo Go.
-
-## Dependencies
-
-The first milestone uses:
-
-- `expo`
-- `react-native-safe-area-context`
-
-React Navigation and Redux Toolkit will be introduced in their corresponding exercises to keep each milestone small and easy to verify.
-
-## Progress
-
-- [x] 10.1 – Safe area provider, safe area root for Home, navy BookStore header
-- [ ] 10.2 – FlatList and loading state
-- [ ] 10.3 – BookCard
+- [x] 10.1 – SafeAreaProvider, SafeAreaView, BookStore header and starter book list
+- [ ] 10.2 – FlatList, loading indicator, rating and stock status
+- [ ] 10.3 – BookCard component and React.memo
 - [ ] 10.4 – Row/tile layouts
-- [ ] 10.5 – Grid switch and refresh
-- [ ] 10.6 – Search and category filters
+- [ ] 10.5 – Two-column grid and RefreshControl
+- [ ] 10.6 – Search and category filtering
 - [ ] 10.7 – React Navigation
-- [ ] 10.8 – Redux store and cart slice
-- [ ] 10.9 – Cart interactions and badge
+- [ ] 10.8 – Redux store, Provider and cart selectors
+- [ ] 10.9 – Cart interactions and tab badge
 - [ ] 10.10 – Favorites
-- [ ] 10.11 – Optional json-server bonus
 
-The app currently contains the minimum Home scaffold needed to demonstrate exercise 10.1. Later exercises will extend the same project rather than creating separate apps.
+Do not move to the next checkpoint until the current screenshot has been captured.
