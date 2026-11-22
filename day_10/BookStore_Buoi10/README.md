@@ -16,11 +16,11 @@ Press `w` to open the web preview, or scan the QR code with Expo Go.
 
 ## Expo Snack preview
 
-See [SNACK_URL.md](./SNACK_URL.md) for the fixed Snack URL. It loads all planned source files from the public GitHub branch `feat/day-10-bookstore`; reload the same URL after new commits to fetch the latest source.
+See [SNACK_URL.md](./SNACK_URL.md) for the fixed Snack URL. It loads the project files from the public GitHub branch `feat/day-10-bookstore`; reload the same URL after new commits to fetch the latest source.
 
 ## Dependencies
 
-The first milestone uses:
+The current milestone uses:
 
 - `expo`
 - `react-native-safe-area-context`
@@ -30,7 +30,7 @@ React Navigation and Redux Toolkit will be introduced in their corresponding exe
 ## Progress
 
 - [x] 10.1 – Source implemented: SafeAreaProvider, SafeAreaView root for Home, navy BookStore header (runtime verification pending)
-- [ ] 10.2 – FlatList and loading state
+- [x] 10.2 – Source implemented: 10-book local dataset, FlatList, unique keyExtractor, 700ms ActivityIndicator loading state (runtime verification pending)
 - [ ] 10.3 – BookCard
 - [ ] 10.4 – Row/tile layouts
 - [ ] 10.5 – Grid switch and refresh
@@ -41,4 +41,4 @@ React Navigation and Redux Toolkit will be introduced in their corresponding exe
 - [ ] 10.10 – Favorites
 - [ ] 10.11 – Optional json-server bonus
 
-The app currently contains the minimum Home scaffold needed to demonstrate exercise 10.1. Source has been committed; runtime verification is still pending. Later exercises will extend the same project rather than creating separate apps.
+Source implementation is committed to GitHub. Runtime verification and screenshots are performed manually in Expo Snack.
