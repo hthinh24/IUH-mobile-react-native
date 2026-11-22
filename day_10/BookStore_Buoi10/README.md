@@ -1,6 +1,6 @@
 # BookStore – Buổi 10
 
-Expo + React Native + TypeScript project for the React Native practice.
+Expo + React Native + TypeScript project for the React Native practice. The uploaded `BookStore_Buoi10_Snack_Starter.zip` is the source of truth for the starter data, UI scaffolding, and exercise TODOs.
 
 ## Run locally
 
@@ -18,19 +18,10 @@ Press `w` to open the web preview, or scan the QR code with Expo Go.
 
 See [SNACK_URL.md](./SNACK_URL.md) for the fixed Snack URL. It loads the project files from the public GitHub branch `feat/day-10-bookstore`; reload the same URL after new commits to fetch the latest source.
 
-## Dependencies
-
-The current milestone uses:
-
-- `expo`
-- `react-native-safe-area-context`
-
-React Navigation and Redux Toolkit will be introduced in their corresponding exercises to keep each milestone small and easy to verify.
-
 ## Progress
 
-- [x] 10.1 – Source implemented: SafeAreaProvider, SafeAreaView root for Home, navy BookStore header (runtime verification pending)
-- [x] 10.2 – Source implemented: 10-book local dataset, FlatList, unique keyExtractor, 700ms ActivityIndicator loading state (runtime verification pending)
+- [x] 10.1 – SafeAreaProvider, SafeAreaView root for Home, navy BookStore header
+- [x] 10.2 – Original 10-book Starter dataset, FlatList, keyExtractor, rating and stock indicators, 700ms ActivityIndicator loading state
 - [ ] 10.3 – BookCard
 - [ ] 10.4 – Row/tile layouts
 - [ ] 10.5 – Grid switch and refresh
