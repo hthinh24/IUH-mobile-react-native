@@ -6,11 +6,12 @@ import { colors } from "../theme";
 
 export function FavoritesScreen() {
   // TODO BT10.10c: chỉ hiển thị các sách có id nằm trong danh sách yêu thích.
+  const favorites = BOOKS;
   return (
     <SafeAreaView style={styles.root} edges={["top"]}>
       <View style={styles.header}><Text style={styles.title}>♥ Yêu thích</Text></View>
       <FlatList
-        data={[]}
+        data={favorites}
         keyExtractor={(book) => book.id}
         contentContainerStyle={{ padding: 14, flexGrow: 1 }}
         ListEmptyComponent={<Text style={styles.empty}>Chưa có sách yêu thích.</Text>}
