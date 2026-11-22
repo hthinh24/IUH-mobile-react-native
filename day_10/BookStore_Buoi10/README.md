@@ -14,6 +14,10 @@ npx expo start
 
 Press `w` to open the web preview, or scan the QR code with Expo Go.
 
+## Expo Snack preview
+
+See [SNACK_URL.md](./SNACK_URL.md) for the fixed Snack URL. It loads all planned source files from the public GitHub branch `feat/day-10-bookstore`; reload the same URL after new commits to fetch the latest source.
+
 ## Dependencies
 
 The first milestone uses:
