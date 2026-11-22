@@ -9,7 +9,7 @@ Project được triển khai tuần tự theo tài liệu thực hành Buổi 1
 
 ## Tiến độ
 
-- [x] Bài 10.1 – Khung ứng dụng và tiêu đề
+- [x] Bài 10.1 – Source đã implement; chờ runtime verification
 - [ ] Bài 10.2 – Danh sách sách từ mảng
 - [ ] Bài 10.3 – Component BookCard
 - [ ] Bài 10.4 – Hai kiểu hiển thị row và tile
